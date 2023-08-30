@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.json-response {
+  background-color: #2e2e2e;
+  color: #a9b7c6;
+  border-radius: 5px;
+  padding: 1em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: "Courier New", monospace;
+}
