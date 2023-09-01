@@ -59,6 +59,21 @@ function App() {
 
       setResponseData(response.data);
       toast.success("GET request was successful!");
+
+      // Insert data into the database
+      try {
+        const insertEndpoint = "http://localhost:3001/api/insert";
+        await axios.post(insertEndpoint, {
+          address: response.data.address,
+          risk: response.data.risk,
+          data: response.data,
+        });
+        toast.success("Data successfully stored in the database");
+      } catch (insertError) {
+        toast.error(
+          `Error storing data in the database: ${insertError.message}`
+        );
+      }
     } catch (error) {
       if (error.response) {
         toast.error(`Error in GET request: ${error.response.status}`);

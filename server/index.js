@@ -90,6 +90,22 @@ app.post("/api/insert", async (req, res) => {
   }
 });
 
+// ROUTE: fetch latest 5 records for visualization
+app.get("/api/fetchLatest", async (req, res) => {
+  try {
+    const query = `
+        SELECT * FROM responses
+        ORDER BY id DESC
+        LIMIT 5;`;
+
+    const { rows } = await client.query(query);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "DB Fetch error" });
+  }
+});
+
 app.listen(3001, () => {
   console.log("Server running on http://localhost:3001");
 });
