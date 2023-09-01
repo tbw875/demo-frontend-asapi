@@ -1,4 +1,17 @@
-/* In App.css */
+/* Define color variables */
+:root {
+  --text: #1c0a1f;
+  --background: #ffffff;
+  --primary: #551e5c;
+  --secondary: #e5beea;
+  --accent: #9936a6;
+}
+
+/* Update the body to use the background color */
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
 
 .json-response {
   background-color: #333;
@@ -8,4 +21,28 @@
   width: 80%;
   overflow: auto;
   margin-top: 20px;
+}
+
+/* Update the container class */
+.container {
+  background-color: var(--background);
+  color: var(--text);
+  position: relative;
+}
+
+/* Update buttons to use primary color */
+button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+}
+
+
+/* Try to override the ConnectWallet button's position */
+.connect-wallet-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--primary);
+  color: var(--secondary);
 }

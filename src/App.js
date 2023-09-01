@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,11 +10,24 @@ import {
   metamaskWallet,
   coinbaseWallet,
   walletConnect,
+  useAddress,
 } from "@thirdweb-dev/react";
 
+function AddressHandler({ setAddress }) {
+  const connectedAddress = useAddress();
+
+  useEffect(() => {
+    if (connectedAddress) {
+      setAddress(connectedAddress);
+    }
+  }, [connectedAddress, setAddress]);
+
+  return null;
+}
+
 function App() {
-  const [address, setAddress] = useState("");
   const [responseData, setResponseData] = useState(null);
+  const [address, setAddress] = useState("");
 
   const handlePostRequest = async () => {
     const apiEndpoint = "http://localhost:3001/api/entities";
@@ -96,13 +109,13 @@ function App() {
   return (
     <ThirdwebProvider
       activeChain="polygon"
-      clientId="da67985796103cccc170eb42e81de46b"
+      clientId="YOUR_CLIENT_ID_HERE"
       supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}
     >
+      <AddressHandler setAddress={setAddress} />
       <div className="container">
         <h1>Welcome to Cryptocurrency Address Checker</h1>
-
-        <ConnectWallet theme={"dark"} />
+        <ConnectWallet className="connect-wallet-btn" theme={"dark"} />
 
         <div>
           <label>
