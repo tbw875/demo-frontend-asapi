@@ -1,48 +1,60 @@
-/* Define color variables */
+/* Define your color variables here */
 :root {
-  --text: #1c0a1f;
-  --background: #ffffff;
-  --primary: #551e5c;
-  --secondary: #e5beea;
-  --accent: #9936a6;
+  --text: #dae4f1;
+  --background: #0e1825;
+  --primary: #cda574;
+  --secondary: #2f3112;
+  --accent: #bf544f;
 }
 
-/* Update the body to use the background color */
-body {
+/* Now let's use those colors */
+
+.container {
   background-color: var(--background);
+  color: var(--text);
+  padding: 2rem;
+}
+
+h1 {
+  color: var(--primary);
+}
+
+.instructions {
+  color: var(--text);
+  font-weight: lighter;
+  margin-bottom: 1rem;
+}
+
+.connect-wallet-btn {
+  background-color: var(--accent);
+  color: var(--text);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.code {
+  background-color: var(--secondary);
+  padding: 1rem;
+  font-family: "Courier New", monospace;
   color: var(--text);
 }
 
 .json-response {
-  background-color: #333;
-  color: #fff;
-  padding: 15px;
-  border-radius: 5px;
-  width: 80%;
-  overflow: auto;
-  margin-top: 20px;
-}
-
-/* Update the container class */
-.container {
-  background-color: var(--background);
+  background-color: var(--secondary);
   color: var(--text);
-  position: relative;
+  padding: 1rem;
+  margin-top: 1rem;
 }
 
-/* Update buttons to use primary color */
+input[type="text"],
+button {
+  margin: 0.5rem;
+  padding: 0.5rem;
+}
+
 button {
   background-color: var(--primary);
-  color: white;
-  border: none;
-}
-
-
-/* Try to override the ConnectWallet button's position */
-.connect-wallet-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: var(--primary);
-  color: var(--secondary);
+  color: var(--text);
+  cursor: pointer;
 }

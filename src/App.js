@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./theme";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import {
+  Button,
+  TextField,
+  Container,
+  Typography,
+  Box,
+  CssBaseline,
+} from "@mui/material";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
@@ -13,7 +27,7 @@ import {
   useAddress,
 } from "@thirdweb-dev/react";
 
-function AddressHandler({ setAddress }) {
+function AddressHandler({ address, setAddress }) {
   const connectedAddress = useAddress();
 
   useEffect(() => {
@@ -107,38 +121,133 @@ function App() {
   };
 
   return (
-    <ThirdwebProvider
-      activeChain="polygon"
-      clientId="YOUR_CLIENT_ID_HERE"
-      supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}
-    >
-      <AddressHandler setAddress={setAddress} />
-      <div className="container">
-        <h1>Welcome to Cryptocurrency Address Checker</h1>
-        <ConnectWallet className="connect-wallet-btn" theme={"dark"} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box
+        sx={{
+          backgroundColor: theme.palette.background.default,
+          minHeight: "100vh",
+        }}
+      >
+        <ThirdwebProvider
+          activeChain="polygon"
+          clientId="YOUR_CLIENT_ID_HERE"
+          supportedWallets={[
+            metamaskWallet(),
+            coinbaseWallet(),
+            walletConnect(),
+          ]}
+        >
+          <AddressHandler setAddress={setAddress} />
+          <Container>
+            <Typography variant="h3">
+              Chainalysis DeFi Wallet Screen Demo
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Step 1: User connects their wallet to the dApp
+            </Typography>
+            <ConnectWallet className="connect-wallet-btn" theme={"dark"} />
+            <Typography variant="body1" gutterBottom>
+              Step 2: We fetch the wallet address via ThirdWeb:
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {/* Code Example */}
+              <pre>
+                {`
+                import { useAddress } from "@thirdweb-dev/react";
+                const address = useAddress();
+              `}
+              </pre>
+            </Typography>
+            <AddressHandler address={address} setAddress={setAddress} />
 
-        <div>
-          <label>
-            Enter Address:
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </label>
-          <button onClick={handlePostRequest}>POST</button>
-          <button onClick={handleGetRequest}>GET</button>
-        </div>
+            <Typography variant="body1">
+              This returns the current connected address.
+              <br />
+              Address: {address || "Wallet not connected"}
+              <br />
+              Step 3: We pass the address in the body of a POST request to
+              register the address to screen:
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {/* Code Example */}
+              <pre>
+                {`
+                const handlePostRequest = async () => {
+                  const response = await axios.post(
+                    "https://api.chainalysis.com/api/risk/v2/entities",
+                    {address: "${address || "your_address_here"}",},
+                    {headers: {
+                        "Content-Type": "application/json",
+                        Token: process.env.REACT_APP_API_KEY},
+                    }
+                  );
+              `}
+              </pre>
+              And then run the POST request:
+            </Typography>
+            <div>
+              <TextField
+                label="Enter Address"
+                variant="outlined"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePostRequest}
+              >
+                POST
+              </Button>
+              <Typography>
+                The address is now registered. The API returns a JSON with the
+                body that you sent, as confirmation.
+              </Typography>
+              <Typography>
+                Step 4: Build a GET request to receive screening information.
+                <br />
+                Instead of passing the address in the body, the address is
+                passed in-line in the request URL:
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                {/* Code Example */}
+                <pre>
+                  {`
+                const handleGetRequest = async () => {
+                  const response = await axios.get(
+                    "https://api.chainalysis.com/api/risk/v2/entities/${address}",
+                    {headers: {
+                        "Content-Type": "application/json",
+                        Token: process.env.REACT_APP_API_KEY},
+                    }
+                  );
+              `}
+                </pre>
+                By sending the GET request, we receive a JSON payload of risk
+                information for the address:
+              </Typography>
 
-        {responseData && (
-          <pre className="json-response">
-            {JSON.stringify(responseData, null, 2)}
-          </pre>
-        )}
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleGetRequest}
+              >
+                GET
+              </Button>
+            </div>
 
-        <ToastContainer />
-      </div>
-    </ThirdwebProvider>
+            {responseData && (
+              <pre className="json-response">
+                {JSON.stringify(responseData, null, 2)}
+              </pre>
+            )}
+
+            <ToastContainer />
+          </Container>
+        </ThirdwebProvider>
+      </Box>
+    </ThemeProvider>
   );
 }
 
