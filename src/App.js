@@ -167,50 +167,68 @@ function App() {
                 <div className="circle yellow"></div>
                 <div className="circle green"></div>
               </div>
-              <div className="url-bar">https://your-defi-project.xyz</div>
+              <div className="url-bar">https://www.lime-defi.xyz</div>
             </div>
             <div className="browser-content">
-              {address ? (
-                <>
-                  <p>Wallet Connected: {address}</p>
-                </>
-              ) : (
-                <ConnectWallet
-                  wallets={[
-                    metamaskWallet(),
-                    coinbaseWallet(),
-                    walletConnect(),
-                  ]}
-                  onError={(error) => console.error(error)}
-                  onSuccess={(wallet) => {
-                    console.log("Wallet connected:", wallet);
-                  }}
-                >
-                  <button className="connect-wallet-btn">Connect Wallet</button>
-                </ConnectWallet>
-              )}
-              <AddressHandler address={address} setAddress={setAddress} />
+              <div className="main-container">
+                {/* Sidebar */}
+                <div className="sidebar">
+                  <div className="sidebar-header">
+                    <img src="lime-logo.png" alt="Li.me DeFi" width="150px" />
+                  </div>
+                  <button className="sidebar-btn">Dashboard</button>
+                  <button className="sidebar-btn">Connect Wallet</button>
+                  <button className="sidebar-btn">Settings</button>
+                  {/* Add more sidebar buttons here */}
+                </div>
+
+                {/* Main Content */}
+                <div className="content">
+                  {address ? (
+                    <>
+                      <p>Wallet Connected: {address}</p>
+                    </>
+                  ) : (
+                    <ConnectWallet
+                      wallets={[
+                        metamaskWallet(),
+                        coinbaseWallet(),
+                        walletConnect(),
+                      ]}
+                      onError={(error) => console.error(error)}
+                      onSuccess={(wallet) => {
+                        console.log("Wallet connected:", wallet);
+                      }}
+                    >
+                      <button className="connect-wallet-btn">
+                        Connect Wallet
+                      </button>
+                    </ConnectWallet>
+                  )}
+                  <AddressHandler address={address} setAddress={setAddress} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          border: "1px solid gainsboro",
+          padding: "20px",
+          borderRadius: "10px",
+        }}
+      >
+        <h2>Your Backend Workflow</h2>
+        {address && <p>Connected Address: {address}</p>}
 
-        <div
-          style={{
-            flex: 1,
-            border: "1px solid gainsboro",
-            padding: "20px",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Your Backend Workflow</h2>
-          {address && <p>Connected Address: {address}</p>}
-
-          {currentStep === 1 && (
-            <div style={{ marginBottom: "20px" }}>
-              <h3>Step 1: Register the address with Chainalysis via POST</h3>
-              <pre className="code-container">
-                <code>
-                  {`// Import Axios and fetch the user's address from ThirdWeb
+        {currentStep === 1 && (
+          <div style={{ marginBottom: "20px" }}>
+            <h3>Step 1: Register the address with Chainalysis via POST</h3>
+            <pre className="code-container">
+              <code>
+                {`// Import Axios and fetch the user's address from ThirdWeb
 var axios = require('axios')
 var data = "{ address: "${address}" }"
 
@@ -235,49 +253,49 @@ axios(config)
 .catch(function (error) {
   console.log(error);
 });`}
-                </code>
-              </pre>
-              <button
-                onClick={() => handlePostRequest("POST")}
-                style={{
-                  backgroundColor: "red",
-                  color: "white",
-                  marginTop: "10px",
-                }}
-              >
-                POST
-              </button>
-              {/* Step 3: Display the POST response */}
+              </code>
+            </pre>
+            <button
+              onClick={() => handlePostRequest("POST")}
+              style={{
+                backgroundColor: "red",
+                color: "white",
+                marginTop: "10px",
+              }}
+            >
+              POST
+            </button>
+            {/* Step 3: Display the POST response */}
 
-              {responseData && (
-                <>
-                  <p style={{ marginTop: "10px" }}>
-                    After the address is registered, the server will return the
-                    address registered. This response is just a confirmation, no
-                    need to store this data.
-                  </p>
-                  <pre
-                    style={{
-                      marginTop: "10px",
-                      backgroundColor: "#f0f0f0",
-                      padding: "10px",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    <code>{JSON.stringify(responseData, null, 2)}</code>
-                  </pre>
-                  <button onClick={() => goToNextStep()}>Next</button>
-                </>
-              )}
-            </div>
-          )}
-          {currentStep === 2 && (
-            <>
-              <h3>Step 3: Send GET request & retrieve data</h3>
-              <p>Build a GET request with the user's address in-line:</p>
-              <pre className="code-container">
-                <code>
-                  {`var config = {
+            {responseData && (
+              <>
+                <p style={{ marginTop: "10px" }}>
+                  After the address is registered, the server will return the
+                  address registered. This response is just a confirmation, no
+                  need to store this data.
+                </p>
+                <pre
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "#f0f0f0",
+                    padding: "10px",
+                    borderRadius: "5px",
+                  }}
+                >
+                  <code>{JSON.stringify(responseData, null, 2)}</code>
+                </pre>
+                <button onClick={() => goToNextStep()}>Next</button>
+              </>
+            )}
+          </div>
+        )}
+        {currentStep === 2 && (
+          <>
+            <h3>Step 3: Send GET request & retrieve data</h3>
+            <p>Build a GET request with the user's address in-line:</p>
+            <pre className="code-container">
+              <code>
+                {`var config = {
   method: 'get',
   url: 'https://api.chainalysis.com/api/risk/v2/entities/${address}',
   headers: { 
@@ -286,35 +304,34 @@ axios(config)
   },
   data : data
 };`}
-                </code>
-              </pre>
-              <button
-                onClick={() => handleGetRequest("GET")}
-                style={{
-                  backgroundColor: "green",
-                  color: "white",
-                  marginTop: "10px",
-                }}
-              >
-                GET
-              </button>
-              {responseData && (
-                <>
-                  <p style={{ marginTop: "10px" }}>
-                    The server responds with a JSON object containing the risk
-                    attributes of the address. In our example, we'll store the
-                    entire JSON object in our database for future reference and
-                    comparison.
-                  </p>
-                  <pre className="code-container">
-                    <code>{JSON.stringify(responseData, null, 2)}</code>
-                  </pre>
-                  <button onClick={() => goToNextStep()}>Next</button>
-                </>
-              )}
-            </>
-          )}
-        </div>
+              </code>
+            </pre>
+            <button
+              onClick={() => handleGetRequest("GET")}
+              style={{
+                backgroundColor: "green",
+                color: "white",
+                marginTop: "10px",
+              }}
+            >
+              GET
+            </button>
+            {responseData && (
+              <>
+                <p style={{ marginTop: "10px" }}>
+                  The server responds with a JSON object containing the risk
+                  attributes of the address. In our example, we'll store the
+                  entire JSON object in our database for future reference and
+                  comparison.
+                </p>
+                <pre className="code-container">
+                  <code>{JSON.stringify(responseData, null, 2)}</code>
+                </pre>
+                <button onClick={() => goToNextStep()}>Next</button>
+              </>
+            )}
+          </>
+        )}
       </div>
     </ThirdwebProvider>
   );
