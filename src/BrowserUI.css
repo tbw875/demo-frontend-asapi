@@ -1,0 +1,55 @@
+.browser-container {
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* Curved corners for the entire container */
+    overflow: hidden; /* Ensures child elements don't spill outside the curved borders */
+}
+
+.browser-bar {
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    padding: 8px 16px; /* Added more horizontal padding for spacing */
+    position: relative; /* Position context for placing icons */
+}
+
+.circles {
+    display: flex;
+    gap: 4px;
+}
+
+.circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.circle.red {
+    background-color: #FF605C;
+}
+
+.circle.yellow {
+    background-color: #FFBD44;
+}
+
+.circle.green {
+    background-color: #00CA4E;
+}
+
+.url-bar {
+    flex: 1;
+    background-color: #fff;
+    padding: 4px 8px;
+    margin-left: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Curved corners for the URL bar */
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100; /* Medium font weight for the URL text */
+    position: relative; /* Position context for placing icons */
+}
+
+.browser-content {
+    padding: 16px;
+}

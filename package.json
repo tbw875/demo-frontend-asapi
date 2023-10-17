@@ -2,6 +2,7 @@
   "name": "demo-frontend-asapi",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://api.chainalysis.com",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -17,6 +18,7 @@
     "axios": "^1.5.0",
     "browserify-zlib": "latest",
     "ethers": "^5.7.2",
+    "highlight.js": "^11.9.0",
     "http": "npm:http-browserify",
     "http-browserify": "latest",
     "https": "npm:https-browserify",
