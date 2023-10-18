@@ -147,24 +147,13 @@ function App() {
               <div className="circle yellow"></div>
               <div className="circle green"></div>
             </div>
-            <div className="url-bar">https://www.lime-defi.xyz</div>
+            <div className="url-bar">https://www.your-defi.xyz</div>
           </div>
           <div className="main-container">
-            {/* Sidebar */}
-            <div className="sidebar">
-              <div className="sidebar-header">
-                <img src="lime-logo.png" alt="Li.me DeFi" width="150px" />
-              </div>
-              <button className="sidebar-btn">Dashboard</button>
-              <button className="sidebar-btn">Settings</button>
-              <button className="sidebar-btn">Vaults</button>
-              <button className="sidebar-btn">DAO</button>
-              <button className="sidebar-btn">Documentation</button>
-              {/* Add more sidebar buttons here */}
-            </div>
-
             {/* Main Content */}
+
             <div className="content">
+              <h1 className="title">Your DEFI Platform</h1>
               {address ? (
                 <>
                   <p>Wallet Connected: {address}</p>
@@ -184,38 +173,26 @@ function App() {
               {/* TODO: Remove inline styles to a css class*/}
               <div
                 style={{
-                  marginTop: "30px",
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  padding: "15px",
-                  borderRadius: "10px",
+                  color: "#8BC53D",
+                  fontWeight: "bold",
+                  marginBottom: "15px",
+                  fontSize: "20px",
                 }}
-              >
-                <div
-                  style={{
-                    color: "#8BC53D",
-                    fontWeight: "bold",
-                    marginBottom: "15px",
-                    fontSize: "20px",
-                  }}
-                >
-                  Lime Protocol Metrics:
-                </div>
-                <div
-                  as="ul"
-                  style={{
-                    color: "#8BC53D",
-                    padding: "0",
-                    margin: "0",
-                    listStyleType: "none",
-                    fontSize: "18px",
-                  }}
-                >
-                  <div as="li">APR: 5.6%</div>
-                  <div as="li">Liquidity Pool: $1,000,000</div>
-                  <div as="li">Total Value Locked: $500,000</div>
-                  <div as="li">Compliance: 100%</div>
-                </div>
-              </div>
+              ></div>
+              <svg width="200px" viewBox="0 0 100 100" className="bar-chart">
+                <rect x="10" y="80" width="10" height="20" fill="#8BC53D" />
+                <rect x="30" y="70" width="10" height="30" fill="#8BC53D" />
+                <rect x="50" y="60" width="10" height="40" fill="#8BC53D" />
+                <rect x="70" y="50" width="10" height="50" fill="#8BC53D" />
+                <line
+                  x1="0"
+                  y1="90"
+                  x2="100"
+                  y2="90"
+                  stroke="#8BC53D"
+                  strokeWidth="2"
+                />
+              </svg>
             </div>
           </div>
         </div>

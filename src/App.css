@@ -5,6 +5,12 @@ body {
   background-color: #f6f7f8;
 }
 
+.title {
+  font-size: 40px;
+  margin-bottom: 20px;
+  color:#8bc43d;
+  font-style: italic;
+}
 
 .button {
   background-color: #ff5300; /* Chainalysis Orange */
