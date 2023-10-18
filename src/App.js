@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ThemeProvider } from "@mui/material/styles";
-import theme from "./theme";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import {
-  Button,
-  TextField,
-  Container,
-  Typography,
-  Box,
-  CssBaseline,
-} from "@mui/material";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
@@ -25,7 +11,14 @@ import {
   coinbaseWallet,
   walletConnect,
   useAddress,
+  useDisconnect,
+  useWallet,
 } from "@thirdweb-dev/react";
+
+import hljs from "highlight.js";
+import javascript from "highlight.js/lib/languages/javascript";
+import "highlight.js/styles/atom-one-dark.css";
+hljs.registerLanguage("javascript", javascript);
 
 function AddressHandler({ address, setAddress }) {
   const connectedAddress = useAddress();
@@ -42,6 +35,28 @@ function AddressHandler({ address, setAddress }) {
 function App() {
   const [responseData, setResponseData] = useState(null);
   const [address, setAddress] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
+
+  // goToNextStep() increments the currentStep state variable by 1
+  // For use on button click
+  const goToNextStep = () => {
+    setCurrentStep((prevStep) => prevStep + 1);
+  };
+
+  // Thise useEffect hook will set the address state variable to the address passed in as a prop
+  useEffect(() => {
+    if (address) {
+      setAddress(address);
+    }
+  }, [address]);
+
+  // disconnectWallet() is a function returned by the useDisconnect() hook
+  //const disconnectWallet = useDisconnect();
+
+  /*
+  Due to CORS policy, we can't make POST requests directly from the frontend.
+  Instead, we'll make a POST request to our backend, which will then make the POST request to the Chainalysis API.
+  */
 
   const handlePostRequest = async () => {
     const apiEndpoint = "http://localhost:3001/api/entities";
@@ -60,6 +75,8 @@ function App() {
           },
         }
       );
+
+      setResponseData(response.data);
 
       if (response.status === 200 && response.data.address) {
         toast.success(
@@ -120,134 +137,215 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    hljs.highlightAll();
+  }, [address, responseData, currentStep]);
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box
-        sx={{
-          backgroundColor: theme.palette.background.default,
-          minHeight: "100vh",
-        }}
-      >
-        <ThirdwebProvider
-          activeChain="polygon"
-          clientId="YOUR_CLIENT_ID_HERE"
-          supportedWallets={[
-            metamaskWallet(),
-            coinbaseWallet(),
-            walletConnect(),
-          ]}
-        >
-          <AddressHandler setAddress={setAddress} />
-          <Container>
-            <Typography variant="h3">
-              Chainalysis DeFi Wallet Screen Demo
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Step 1: User connects their wallet to the dApp
-            </Typography>
-            <ConnectWallet className="connect-wallet-btn" theme={"dark"} />
-            <Typography variant="body1" gutterBottom>
-              Step 2: We fetch the wallet address via ThirdWeb:
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              {/* Code Example */}
-              <pre>
-                {`
-                import { useAddress } from "@thirdweb-dev/react";
-                const address = useAddress();
-              `}
-              </pre>
-            </Typography>
-            <AddressHandler address={address} setAddress={setAddress} />
-
-            <Typography variant="body1">
-              This returns the current connected address.
-              <br />
-              Address: {address || "Wallet not connected"}
-              <br />
-              Step 3: We pass the address in the body of a POST request to
-              register the address to screen:
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              {/* Code Example */}
-              <pre>
-                {`
-                const handlePostRequest = async () => {
-                  const response = await axios.post(
-                    "https://api.chainalysis.com/api/risk/v2/entities",
-                    {address: "${address || "your_address_here"}",},
-                    {headers: {
-                        "Content-Type": "application/json",
-                        Token: process.env.REACT_APP_API_KEY},
-                    }
-                  );
-              `}
-              </pre>
-              And then run the POST request:
-            </Typography>
-            <div>
-              <TextField
-                label="Enter Address"
-                variant="outlined"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handlePostRequest}
-              >
-                POST
-              </Button>
-              <Typography>
-                The address is now registered. The API returns a JSON with the
-                body that you sent, as confirmation.
-              </Typography>
-              <Typography>
-                Step 4: Build a GET request to receive screening information.
-                <br />
-                Instead of passing the address in the body, the address is
-                passed in-line in the request URL:
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                {/* Code Example */}
-                <pre>
-                  {`
-                const handleGetRequest = async () => {
-                  const response = await axios.get(
-                    "https://api.chainalysis.com/api/risk/v2/entities/${address}",
-                    {headers: {
-                        "Content-Type": "application/json",
-                        Token: process.env.REACT_APP_API_KEY},
-                    }
-                  );
-              `}
-                </pre>
-                By sending the GET request, we receive a JSON payload of risk
-                information for the address:
-              </Typography>
-
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleGetRequest}
-              >
-                GET
-              </Button>
+    <ThirdwebProvider>
+      <ToastContainer />
+      <div className="container">
+        <div className="browser-container">
+          <div className="browser-bar">
+            <div className="circles">
+              <div className="circle red"></div>
+              <div className="circle yellow"></div>
+              <div className="circle green"></div>
+            </div>
+            <div className="url-bar">https://www.lime-defi.xyz</div>
+          </div>
+          <div className="main-container">
+            {/* Sidebar */}
+            <div className="sidebar">
+              <div className="sidebar-header">
+                <img src="lime-logo.png" alt="Li.me DeFi" width="150px" />
+              </div>
+              <button className="sidebar-btn">Dashboard</button>
+              <button className="sidebar-btn">Settings</button>
+              <button className="sidebar-btn">Vaults</button>
+              <button className="sidebar-btn">DAO</button>
+              <button className="sidebar-btn">Documentation</button>
+              {/* Add more sidebar buttons here */}
             </div>
 
-            {responseData && (
-              <pre className="json-response">
-                {JSON.stringify(responseData, null, 2)}
-              </pre>
-            )}
+            {/* Main Content */}
+            <div className="content">
+              {address ? (
+                <>
+                  <p>Wallet Connected: {address}</p>
+                </>
+              ) : (
+                <ConnectWallet
+                  wallets={[
+                    metamaskWallet(),
+                    coinbaseWallet(),
+                    walletConnect(),
+                  ]}
+                  onError={(error) => console.error(error)}
+                  onSuccess={(wallet) => {
+                    console.log("Wallet connected:", wallet);
+                  }}
+                >
+                  <button className="connect-wallet-btn">Connect Wallet</button>
+                </ConnectWallet>
+              )}
+              <AddressHandler address={address} setAddress={setAddress} />
 
-            <ToastContainer />
-          </Container>
-        </ThirdwebProvider>
-      </Box>
-    </ThemeProvider>
+              {/* TODO: Remove inline styles to a css class*/}
+              <div
+                style={{
+                  marginTop: "30px",
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  padding: "15px",
+                  borderRadius: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    color: "#8BC53D",
+                    fontWeight: "bold",
+                    marginBottom: "15px",
+                    fontSize: "20px",
+                  }}
+                >
+                  Lime Protocol Metrics:
+                </div>
+                <div
+                  as="ul"
+                  style={{
+                    color: "#8BC53D",
+                    padding: "0",
+                    margin: "0",
+                    listStyleType: "none",
+                    fontSize: "18px",
+                  }}
+                >
+                  <div as="li">APR: 5.6%</div>
+                  <div as="li">Liquidity Pool: $1,000,000</div>
+                  <div as="li">Total Value Locked: $500,000</div>
+                  <div as="li">Compliance: 100%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="right-pane">
+          <h2>Your Backend Workflow</h2>
+          {address && <p>Connected Address: {address}</p>}
+
+          {currentStep === 1 && (
+            <div style={{ marginBottom: "20px" }}>
+              <h3>Step 1: Register the address with Chainalysis via POST</h3>
+              <pre className="code-container">
+                <code>
+                  {`// Import Axios and fetch the user's address from ThirdWeb
+var axios = require('axios')
+var data = "{ address: "${address}" }"
+
+// Set up the POST request
+// API Key is in a .env file
+// Pass the address in the request body as 'data'
+var config = {
+  method: 'post',
+  url: 'https://api.chainalysis.com/api/risk/v2/entities',
+  headers: { 
+    'Content-Type': 'application/json', 
+    'Token': {process.env.API_KEY}
+  },
+  data : data
+};
+
+// Make the POST request
+axios(config)
+.then(function (response) {
+  console.log(JSON.stringify(response.data));
+})
+.catch(function (error) {
+  console.log(error);
+});`}
+                </code>
+              </pre>
+              <button
+                onClick={() => handlePostRequest("POST")}
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  marginTop: "10px",
+                }}
+              >
+                POST
+              </button>
+              {/* Step 3: Display the POST response */}
+
+              {responseData && (
+                <>
+                  <p style={{ marginTop: "10px" }}>
+                    After the address is registered, the server will return the
+                    address registered. This response is just a confirmation, no
+                    need to store this data.
+                  </p>
+                  <pre
+                    style={{
+                      marginTop: "10px",
+                      backgroundColor: "#f0f0f0",
+                      padding: "10px",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <code>{JSON.stringify(responseData, null, 2)}</code>
+                  </pre>
+                  <button onClick={() => goToNextStep()}>Next</button>
+                </>
+              )}
+            </div>
+          )}
+          {currentStep === 2 && (
+            <>
+              <h3>Step 3: Send GET request & retrieve data</h3>
+              <p>Build a GET request with the user's address in-line:</p>
+              <pre className="code-container">
+                <code>
+                  {`var config = {
+  method: 'get',
+  url: 'https://api.chainalysis.com/api/risk/v2/entities/${address}',
+  headers: { 
+    'Content-Type': 'application/json', 
+    'Token': 'process.env.API_KEY'
+  },
+  data : data
+};`}
+                </code>
+              </pre>
+              <button
+                onClick={() => handleGetRequest("GET")}
+                style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  marginTop: "10px",
+                }}
+              >
+                GET
+              </button>
+              {responseData && (
+                <>
+                  <p style={{ marginTop: "10px" }}>
+                    The server responds with a JSON object containing the risk
+                    attributes of the address. In our example, we'll store the
+                    entire JSON object in our database for future reference and
+                    comparison.
+                  </p>
+                  <pre className="code-container">
+                    <code>{JSON.stringify(responseData, null, 2)}</code>
+                  </pre>
+                  <button onClick={() => goToNextStep()}>Next</button>
+                </>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </ThirdwebProvider>
   );
 }
 

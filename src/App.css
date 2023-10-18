@@ -1,60 +1,150 @@
-/* Define your color variables here */
-:root {
-  --text: #dae4f1;
-  --background: #0e1825;
-  --primary: #cda574;
-  --secondary: #2f3112;
-  --accent: #bf544f;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f6f7f8;
 }
 
-/* Now let's use those colors */
-
-.container {
-  background-color: var(--background);
-  color: var(--text);
-  padding: 2rem;
+.main-container {
+  display: flex;
+  background-color: #181818;
+  font-family: Arial, sans-serif;
+  color: #FFFFFF;
+  width: 100%;
+  height: 75vh;
 }
 
-h1 {
-  color: var(--primary);
+.sidebar {
+  width: 150px;
+  background-color: #1D1D1D;
+  padding: 20px;
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
-.instructions {
-  color: var(--text);
-  font-weight: lighter;
-  margin-bottom: 1rem;
+.sidebar-header {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.sidebar-btn {
+  display: block;
+  background-color: #2A2A2A;
+  color: #8BC53D;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-align: left;
+  margin-bottom: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-btn:hover {
+  background-color: #3D3D3D;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #242424;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .connect-wallet-btn {
-  background-color: var(--accent);
-  color: var(--text);
-  padding: 1rem;
-  margin-bottom: 1rem;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #DD2D2D;
+  border-radius: 5px;
+  color: #DD2D2D;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.connect-wallet-btn:hover {
+  background-color: #FF4E4E;
+}
+
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+
+.flex-box {
+  flex: 1;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007BFF;
+  color: #FFF;
   cursor: pointer;
 }
 
-.code {
-  background-color: var(--secondary);
-  padding: 1rem;
-  font-family: "Courier New", monospace;
-  color: var(--text);
+button:hover {
+  background-color: #0056b3;
 }
 
-.json-response {
-  background-color: var(--secondary);
-  color: var(--text);
-  padding: 1rem;
-  margin-top: 1rem;
+input[type="text"], textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
 }
 
-input[type="text"],
-button {
-  margin: 0.5rem;
-  padding: 0.5rem;
+
+.code-container code {             
+  font-family:'ui-monospace','SFMono-Regular','Menlo','Monaco','Consolas','Liberation Mono','Courier New',monospace;
+  font-size: 0.8rem;
+  border-radius: 8px;
 }
 
-button {
-  background-color: var(--primary);
-  color: var(--text);
+/* Inline Code Styling (if needed) */
+.code-inline {
+  background-color: #272727;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #ddd;
+}
+
+/* Run Script Button */
+.run-script-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: #fff;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.run-script-btn:hover {
+  background-color: #45a049; /* Slightly darker shade on hover */
+}
+
+.right-pane {
+  flex: 1;
+  border: 1px solid gainsboro;
+  padding: 20px;
+  border-radius: 10px;
 }
