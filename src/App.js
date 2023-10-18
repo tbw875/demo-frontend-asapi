@@ -3,62 +3,48 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-
-import {
-  ThirdwebProvider,
-  ConnectWallet,
-  metamaskWallet,
-  coinbaseWallet,
-  walletConnect,
-  useAddress,
-  useDisconnect,
-  useWallet,
-} from "@thirdweb-dev/react";
+import { ethers } from "ethers";
 
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 import "highlight.js/styles/atom-one-dark.css";
 hljs.registerLanguage("javascript", javascript);
 
-function AddressHandler({ address, setAddress }) {
-  const connectedAddress = useAddress();
-
-  useEffect(() => {
-    if (connectedAddress) {
-      setAddress(connectedAddress);
-    }
-  }, [connectedAddress, setAddress]);
-
-  return null;
-}
-
 function App() {
   const [responseData, setResponseData] = useState(null);
   const [address, setAddress] = useState("");
-  const [inputAddress, setInputAddress] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
+
+  const connect = async () => {
+    if (window.ethereum) {
+      try {
+        // Request account access
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        console.log(`Wallet: ${address}`);
+        toast.success(`Wallet connected: ${address}`);
+        setAddress(address);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log("No Ethereum browser extension detected, install MetaMask!");
+    }
+  };
+
+  const disconnect = () => {
+    console.log("Wallet disconnected");
+    toast.warn("Wallet disconnected");
+    setAddress("");
+  };
 
   // goToNextStep() increments the currentStep state variable by 1
   // For use on button click
   const goToNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
-  };
-
-  // Thise useEffect hook will set the address state variable to the address passed in as a prop
-  // The form filled address is prioritized over the Connect Wallet address if both is present.
-  useEffect(() => {
-    if (inputAddress) {
-      setAddress(inputAddress);
-    } else if (address) {
-      setAddress(address);
-    }
-  }, [address, inputAddress]);
-
-  const handleAddressInput = (e) => {
-    e.preventDefault();
-    if (inputAddress) {
-      setAddress(inputAddress);
-    }
   };
 
   /*
@@ -150,8 +136,9 @@ function App() {
   }, [address, responseData, currentStep]);
 
   return (
-    <ThirdwebProvider>
+    <>
       <ToastContainer />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
       <div className="container">
         <div className="browser-container">
           <div className="browser-bar">
@@ -181,23 +168,18 @@ function App() {
               {address ? (
                 <>
                   <p>Wallet Connected: {address}</p>
+                  <button
+                    onClick={disconnect}
+                    className="disconnect-wallet-btn"
+                  >
+                    Disconnect Wallet
+                  </button>
                 </>
               ) : (
-                <ConnectWallet
-                  wallets={[
-                    metamaskWallet(),
-                    coinbaseWallet(),
-                    walletConnect(),
-                  ]}
-                  onError={(error) => console.error(error)}
-                  onSuccess={(wallet) => {
-                    console.log("Wallet connected:", wallet);
-                  }}
-                >
-                  <button className="connect-wallet-btn">Connect Wallet</button>
-                </ConnectWallet>
+                <button onClick={connect} className="connect-wallet-btn">
+                  Connect Wallet
+                </button>
               )}
-              <AddressHandler address={address} setAddress={setAddress} />
 
               {/* TODO: Remove inline styles to a css class*/}
               <div
@@ -243,13 +225,13 @@ function App() {
             Your Backend Workflow
           </h2>
           {/* New form for inputting address */}
-          <form onSubmit={handleAddressInput} className="address-form">
+          <form className="address-form">
             <label>
               Manual Address Input:
               <input
                 type="text"
-                value={inputAddress}
-                onChange={(e) => setInputAddress(e.target.value)}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
                 style={{
                   marginRight: "10px",
                   marginBottom: "5px",
@@ -258,9 +240,6 @@ function App() {
                 }}
               />
             </label>
-            <button type="submit" className="button">
-              Submit
-            </button>
           </form>
 
           {address && (
@@ -378,7 +357,7 @@ axios(config)
           )}
         </div>
       </div>
-    </ThirdwebProvider>
+    </>
   );
 }
 

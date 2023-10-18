@@ -8,7 +8,12 @@ body {
 
 .button {
   background-color: #ff5300; /* Chainalysis Orange */
+  display: inline-block;
+  padding: 10px 20px;;
+  border-radius: 5px;
   color: white;
+  text-align: center;
+  cursor: pointer;
 }
 .button:hover{
   background-color: #ff6d38;
@@ -76,16 +81,31 @@ body {
 .connect-wallet-btn {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #DD2D2D;
+  background-color: #8bc43d;
   border-radius: 5px;
-  color: #DD2D2D;
+  color: white;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
 .connect-wallet-btn:hover {
-  background-color: #FF4E4E;
+  background-color: #9fce62;
+}
+
+.disconnect-wallet-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #8bc43d;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.disconnect-wallet-btn:hover {
+  background-color: #9fce62;
 }
 
 
@@ -107,20 +127,7 @@ body {
 
 h2 {
   font-size: 24px;
-  margin-bottom: 20px;
-}
-
-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007BFF;
-  color: #FFF;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
+  margin-bottom: 10px;
 }
 
 input[type="text"], textarea {
@@ -144,24 +151,6 @@ input[type="text"], textarea {
   padding: 2px 6px;
   border-radius: 4px;
   color: #ddd;
-}
-
-/* Run Script Button */
-.run-script-btn {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #4CAF50;
-  color: #fff;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.run-script-btn:hover {
-  background-color: #45a049; /* Slightly darker shade on hover */
 }
 
 .right-pane {

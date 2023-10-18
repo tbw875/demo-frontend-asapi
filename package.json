@@ -32,6 +32,7 @@
     "stream": "^0.0.2",
     "url": "latest",
     "web-vitals": "^2.1.4",
+    "web3": "^4.2.0",
     "zlib": "npm:browserify-zlib"
   },
   "scripts": {
@@ -57,5 +58,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "source-map-loader": "^4.0.1"
   }
 }
