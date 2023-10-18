@@ -35,6 +35,7 @@ function AddressHandler({ address, setAddress }) {
 function App() {
   const [responseData, setResponseData] = useState(null);
   const [address, setAddress] = useState("");
+  const [inputAddress, setInputAddress] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
 
   // goToNextStep() increments the currentStep state variable by 1
@@ -44,14 +45,21 @@ function App() {
   };
 
   // Thise useEffect hook will set the address state variable to the address passed in as a prop
+  // The form filled address is prioritized over the Connect Wallet address if both is present.
   useEffect(() => {
-    if (address) {
+    if (inputAddress) {
+      setAddress(inputAddress);
+    } else if (address) {
       setAddress(address);
     }
-  }, [address]);
+  }, [address, inputAddress]);
 
-  // disconnectWallet() is a function returned by the useDisconnect() hook
-  //const disconnectWallet = useDisconnect();
+  const handleAddressInput = (e) => {
+    e.preventDefault();
+    if (inputAddress) {
+      setAddress(inputAddress);
+    }
+  };
 
   /*
   Due to CORS policy, we can't make POST requests directly from the frontend.
@@ -231,12 +239,41 @@ function App() {
         </div>
 
         <div className="right-pane">
-          <h2>Your Backend Workflow</h2>
-          {address && <p>Connected Address: {address}</p>}
+          <h2 style={{ marginTop: "0px", marginBottom: "5px" }}>
+            Your Backend Workflow
+          </h2>
+          {/* New form for inputting address */}
+          <form onSubmit={handleAddressInput} className="address-form">
+            <label>
+              Manual Address Input:
+              <input
+                type="text"
+                value={inputAddress}
+                onChange={(e) => setInputAddress(e.target.value)}
+                style={{
+                  marginRight: "10px",
+                  marginBottom: "5px",
+                  flex: 1,
+                  maxWidth: "calc(100% - 40px)",
+                }}
+              />
+            </label>
+            <button type="submit" className="button">
+              Submit
+            </button>
+          </form>
+
+          {address && (
+            <p style={{ marginTop: "0px", marginBottom: "0px" }}>
+              Connected Address: {address}
+            </p>
+          )}
 
           {currentStep === 1 && (
             <div style={{ marginBottom: "20px" }}>
-              <h3>Step 1: Register the address with Chainalysis via POST</h3>
+              <h3 style={{ marginBottom: "0px" }}>
+                Step 1: Register the address with Chainalysis via POST
+              </h3>
               <pre className="code-container">
                 <code>
                   {`// Import Axios and fetch the user's address from ThirdWeb
@@ -268,11 +305,7 @@ axios(config)
               </pre>
               <button
                 onClick={() => handlePostRequest("POST")}
-                style={{
-                  backgroundColor: "red",
-                  color: "white",
-                  marginTop: "10px",
-                }}
+                className="button"
               >
                 POST
               </button>
@@ -295,7 +328,9 @@ axios(config)
                   >
                     <code>{JSON.stringify(responseData, null, 2)}</code>
                   </pre>
-                  <button onClick={() => goToNextStep()}>Next</button>
+                  <button className="button" onClick={() => goToNextStep()}>
+                    Next
+                  </button>
                 </>
               )}
             </div>
@@ -319,11 +354,7 @@ axios(config)
               </pre>
               <button
                 onClick={() => handleGetRequest("GET")}
-                style={{
-                  backgroundColor: "green",
-                  color: "white",
-                  marginTop: "10px",
-                }}
+                className="button"
               >
                 GET
               </button>
@@ -338,7 +369,9 @@ axios(config)
                   <pre className="code-container">
                     <code>{JSON.stringify(responseData, null, 2)}</code>
                   </pre>
-                  <button onClick={() => goToNextStep()}>Next</button>
+                  <button onClick={() => goToNextStep()} className="button">
+                    Next
+                  </button>
                 </>
               )}
             </>

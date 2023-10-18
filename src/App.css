@@ -5,6 +5,28 @@ body {
   background-color: #f6f7f8;
 }
 
+
+.button {
+  background-color: #ff5300; /* Chainalysis Orange */
+  color: white;
+}
+.button:hover{
+  background-color: #ff6d38;
+}
+
+.address-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.address-form label {
+  flex-grow: 1;
+}
+
+
+
 .main-container {
   display: flex;
   background-color: #181818;
